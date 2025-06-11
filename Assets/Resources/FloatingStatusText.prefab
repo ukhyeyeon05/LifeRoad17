@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3058778535152024944}
   - component: {fileID: 5722212119722813331}
   - component: {fileID: 5222684571756916592}
-  - component: {fileID: 6354100988049627453}
+  - component: {fileID: 26919003687371414}
   m_Layer: 5
   m_Name: FloatingStatusText
   m_TagString: Untagged
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &6354100988049627453
+--- !u!114 &26919003687371414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 607061739144058667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f667ceacd4ea334ea8649e19aaca7e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b21776d4e61b9a41a292e6572b1294d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   floatSpeed: 50
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 3132971181134456364}
   - component: {fileID: 1531056578292270818}
   - component: {fileID: 7440727625052169176}
-  - component: {fileID: 4815309251186138375}
+  - component: {fileID: 548685640485286946}
   m_Layer: 5
   m_Name: score
   m_TagString: Untagged
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &4815309251186138375
+--- !u!114 &548685640485286946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -301,6 +301,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4067117989362225982}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 643e12856e6d8804fb7c1539edda4ce5, type: 3}
+  m_Script: {fileID: 11500000, guid: 40b597fc7c090104e862671dc6aa1e4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

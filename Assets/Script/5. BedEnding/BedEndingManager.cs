@@ -1,19 +1,3 @@
-/*using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class BedEndingManager : MonoBehaviour
-{
-    public void RetryPuzzle()
-    {
-        string lastScene = PlayerPrefs.GetString("LastPuzzleScene", "Puz1_Starting");
-        SceneManager.LoadScene(lastScene);
-    }
-
-    public void GoToPuzzleSelect()
-    {
-        SceneManager.LoadScene("0_ChapterSelect");
-    }
-}*/
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

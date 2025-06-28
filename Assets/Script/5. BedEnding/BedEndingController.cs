@@ -1,157 +1,136 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 
-public class BedEndingController : MonoBehaviour
+public class BadEndingController : MonoBehaviour
 {
-    [Header("UI 텍스트")]
-    public TextMeshProUGUI typingText;
-    public TextMeshProUGUI feedbackText;
-    public TextMeshProUGUI factText;
+    [Header("텍스트들 (Hierarchy에서 직접 작성)")]
+    public TextMeshProUGUI[] textObjects;      // 0: Bad Ending, 1: 엔딩 문구, 2: 어떠셨나요, 3: 사례
+    public CanvasGroup[] canvasGroups;         // 각 텍스트의 CanvasGroup
 
-    [Header("버튼과 클릭 가이드")]
-    public GameObject clickGuideImage;
-    public GameObject fullscreenPanel;
+    [Header("버튼")]
+    public CanvasGroup retryButtonGroup;       // 다시 하기
+    public CanvasGroup selectButtonGroup;      // 퍼즐 선택
 
-    [Header("CanvasGroup")]
-    public CanvasGroup typingGroup;
-    public CanvasGroup feedbackGroup;
-    public CanvasGroup factGroup;
-    public CanvasGroup buttonGroup;
+    [Header("페이드 설정")]
+    public float fadeDuration = 1f;
 
-    [Header("베드엔딩 버튼")]
-    public Button retryButton;
-    public Button goSelectButton;
+    [Header("페이드 아웃용 검은 배경")]
+    public CanvasGroup fullscreenPanel;
 
-    [TextArea]
-    public string typingSentence = "당신은 이번 인생의 Key를 무사히 지키지 못했습니다.";
-    [TextArea]
-    public string factSentence = "빈곤 문제는 단지 개인의 문제가 아닙니다.\n지속가능한 사회안전망 구축 없이는, 많은 이들이 위기에 놓일 수 있습니다.";
-
-    private int currentPhase = 0;
-    private bool canClick = false;
+    private int currentIndex = -1;
+    private bool isTransitioning = false;
 
     void Start()
     {
-        feedbackGroup.alpha = 0;
-        factGroup.alpha = 0;
-        buttonGroup.alpha = 0;
-        typingGroup.alpha = 1;
-
-        typingText.text = "";
-        feedbackText.text = "";
-        factText.text = "";
-
-        retryButton.interactable = false;
-        goSelectButton.interactable = false;
-        clickGuideImage.SetActive(false);
-
-        StartCoroutine(TypeText());
-    }
-
-    IEnumerator TypeText()
-    {
-        foreach (char c in typingSentence)
+        // 전부 초기화
+        for (int i = 0; i < canvasGroups.Length; i++)
         {
-            typingText.text += c;
-            yield return new WaitForSeconds(0.05f);
+            SetAlpha(canvasGroups[i], 0);
         }
-        yield return new WaitForSeconds(0.5f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
 
-    public void NextStep()
-    {
-        if (!canClick) return;
-
-        canClick = false;
-        clickGuideImage.SetActive(false);
-        currentPhase++;
-
-        switch (currentPhase)
-        {
-            case 1:
-                StartCoroutine(SwitchTypingToFeedback());
-                break;
-            case 2:
-                StartCoroutine(SwitchFeedbackToFact());
-                break;
-            case 3:
-                StartCoroutine(ShowButtons());
-                break;
-        }
-    }
-
-    IEnumerator SwitchTypingToFeedback()
-    {
-        yield return FadeCanvasGroup(typingGroup, false);
-        feedbackText.text = "어떠셨나요?";
-        yield return FadeCanvasGroup(feedbackGroup, true);
-        yield return new WaitForSeconds(0.3f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
-
-    IEnumerator SwitchFeedbackToFact()
-    {
-        yield return FadeCanvasGroup(feedbackGroup, false);
-        factText.text = factSentence;
-        yield return FadeCanvasGroup(factGroup, true);
-        yield return new WaitForSeconds(0.3f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
-
-    IEnumerator ShowButtons()
-    {
-        yield return FadeCanvasGroup(factGroup, false);
-
-        // 여기에서 Raycast를 꺼줘야 버튼이 클릭 가능
+        SetAlpha(retryButtonGroup, 0);
+        SetAlpha(selectButtonGroup, 0);
         if (fullscreenPanel != null)
-        {
-            CanvasGroup cg = fullscreenPanel.GetComponent<CanvasGroup>();
-            if (cg != null)
-            {
-                cg.interactable = false;
-                cg.blocksRaycasts = false;
-            }
-        }
+            fullscreenPanel.alpha = 0;
 
-        yield return FadeCanvasGroup(buttonGroup, true);
-        retryButton.interactable = true;
-        goSelectButton.interactable = true;
+        ShowNext(); // 첫 문장부터 시작
     }
 
-
-
-    IEnumerator FadeCanvasGroup(CanvasGroup group, bool fadeIn, float duration = 0.8f)
+    void Update()
     {
-        float time = 0f;
-        float start = fadeIn ? 0 : 1;
-        float end = fadeIn ? 1 : 0;
-
-        while (time < duration)
+        if (Input.GetMouseButtonDown(0) && !isTransitioning)
         {
+            ShowNext();
+        }
+    }
+
+    void ShowNext()
+    {
+        currentIndex++;
+
+        if (currentIndex > 0 && currentIndex <= canvasGroups.Length)
+        {
+            // 이전 문구 FadeOut
+            StartCoroutine(FadeOut(canvasGroups[currentIndex - 1]));
+        }
+
+        if (currentIndex < canvasGroups.Length)
+        {
+            // 현재 문구 FadeIn (텍스트는 미리 Hierarchy에서 작성되어 있음)
+            StartCoroutine(FadeIn(canvasGroups[currentIndex]));
+        }
+        else
+        {
+            // 문장 다 끝났으면 버튼 2개 표시
+            StartCoroutine(FadeIn(retryButtonGroup));
+            StartCoroutine(FadeIn(selectButtonGroup));
+        }
+    }
+
+    IEnumerator FadeIn(CanvasGroup group)
+    {
+        isTransitioning = true;
+        float time = 0f;
+        while (time < fadeDuration)
+        {
+            group.alpha = Mathf.Lerp(0f, 1f, time / fadeDuration);
             time += Time.deltaTime;
-            group.alpha = Mathf.Lerp(start, end, time / duration);
             yield return null;
         }
+        SetAlpha(group, 1f);
+        isTransitioning = false;
+    }
 
-        group.alpha = end;
-        group.gameObject.SetActive(fadeIn);
+    IEnumerator FadeOut(CanvasGroup group)
+    {
+        isTransitioning = true;
+        float time = 0f;
+        while (time < fadeDuration)
+        {
+            group.alpha = Mathf.Lerp(1f, 0f, time / fadeDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        SetAlpha(group, 0f);
+        isTransitioning = false;
+    }
+
+    void SetAlpha(CanvasGroup group, float alpha)
+    {
+        group.alpha = alpha;
+        group.interactable = (alpha >= 1);
+        group.blocksRaycasts = (alpha >= 1);
     }
 
     // 버튼 기능
     public void RetryPuzzle()
     {
         string lastScene = PlayerPrefs.GetString("LastPuzzleScene", "Puz1_Starting");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(lastScene);
+        SceneManager.LoadScene(lastScene);
     }
 
     public void GoToPuzzleSelect()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("0_ChapterSelect");
+        StartCoroutine(FadeOutAndLoad("0_ChapterSelect"));
+    }
+
+    IEnumerator FadeOutAndLoad(string sceneName)
+    {
+        if (fullscreenPanel != null)
+        {
+            fullscreenPanel.gameObject.SetActive(true);
+            float time = 0f;
+            float duration = 1f;
+            while (time < duration)
+            {
+                fullscreenPanel.alpha = Mathf.Lerp(0f, 1f, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        SceneManager.LoadScene(sceneName);
     }
 }

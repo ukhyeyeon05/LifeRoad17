@@ -1,132 +1,118 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 
 public class ClearEndingController : MonoBehaviour
 {
-    [Header("UI 텍스트")]
-    public TextMeshProUGUI typingText;
-    public TextMeshProUGUI feedbackText;
-    public TextMeshProUGUI factText;
+    public TextMeshProUGUI[] textObjects;      // Hierarchy에 있는 TMP 텍스트
+    public CanvasGroup[] canvasGroups;         // 그에 대응되는 CanvasGroup
+    public CanvasGroup buttonGroup;            // [다른 퍼즐 보기] 버튼
+    public CanvasGroup fullscreenPanel;        // 페이드 아웃용 검은 패널
 
-    [Header("버튼과 클릭 가이드")]
-    public Button nextPuzzleButton;
-    public GameObject clickGuideImage;
-    public GameObject fullscreenPanel;
-
-    [Header("CanvasGroup")]
-    public CanvasGroup typingGroup;
-    public CanvasGroup feedbackGroup;
-    public CanvasGroup factGroup;
-    public CanvasGroup buttonGroup;
-
-    [TextArea]
-    public string typingSentence = "당신은 이번 인생의 Key를 끝까지 지켜냈습니다.";
-    [TextArea]
-    public string factSentence = "실제 고령화는 전세계적으로 빠르게 진행 중이지만,\n노후 복지와 연금 개혁은 그 속도를 따라오지 못하고 있습니다.\n또한 수많은 빈곤층들이 사회 보장 시스템의 사각지대에 놓여 있습니다.\n\n- UN(2023), OECD(2023), World Bank Group(2025) -";
-
-    private int currentPhase = 0;
-    private bool canClick = false;
+    public float fadeDuration = 1f;
+    private int currentIndex = -1;
+    private bool isTransitioning = false;
 
     void Start()
     {
-        // 초기 상태 설정
-        feedbackGroup.alpha = 0;
-        factGroup.alpha = 0;
-        buttonGroup.alpha = 0;
-        typingGroup.alpha = 1;
-
-        typingText.text = "";
-        feedbackText.text = "";
-        factText.text = "";
-
-        nextPuzzleButton.interactable = false;
-        clickGuideImage.SetActive(false);
-
-        StartCoroutine(TypeText());
-    }
-
-    IEnumerator TypeText()
-    {
-        foreach (char c in typingSentence)
+        // 처음엔 다 숨김
+        for (int i = 0; i < canvasGroups.Length; i++)
         {
-            typingText.text += c;
-            yield return new WaitForSeconds(0.05f);
+            SetAlpha(canvasGroups[i], 0);
         }
-        yield return new WaitForSeconds(0.5f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
 
-    public void NextStep() // FullscreenPanel에 연결
-    {
-        if (!canClick) return;
-
-        canClick = false;
-        clickGuideImage.SetActive(false);
-        currentPhase++;
-
-        switch (currentPhase)
-        {
-            case 1:
-                StartCoroutine(SwitchTypingToFeedback());
-                break;
-            case 2:
-                StartCoroutine(SwitchFeedbackToFact());
-                break;
-            case 3:
-                StartCoroutine(ShowButton());
-                break;
-        }
-    }
-
-    IEnumerator SwitchTypingToFeedback()
-    {
-        yield return FadeCanvasGroup(typingGroup, false);
-        feedbackText.text = "어떠셨나요?";
-        yield return FadeCanvasGroup(feedbackGroup, true);
-        yield return new WaitForSeconds(0.3f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
-
-    IEnumerator SwitchFeedbackToFact()
-    {
-        yield return FadeCanvasGroup(feedbackGroup, false);
-        factText.text = factSentence;
-        yield return FadeCanvasGroup(factGroup, true);
-        yield return new WaitForSeconds(0.3f);
-        clickGuideImage.SetActive(true);
-        canClick = true;
-    }
-
-    IEnumerator ShowButton()
-    {
-        yield return FadeCanvasGroup(factGroup, false);
-
-        // FullscreenPanel 비활성화해서 버튼 클릭 가능
+        SetAlpha(buttonGroup, 0);
         if (fullscreenPanel != null)
-            fullscreenPanel.SetActive(false);
+            fullscreenPanel.alpha = 0;
 
-        yield return FadeCanvasGroup(buttonGroup, true);
-        nextPuzzleButton.interactable = true;
+        ShowNext(); // 첫 문장 보여주기
     }
 
-    IEnumerator FadeCanvasGroup(CanvasGroup group, bool fadeIn, float duration = 0.8f)
+    void Update()
     {
+        if (Input.GetMouseButtonDown(0) && !isTransitioning)
+        {
+            ShowNext();
+        }
+    }
+
+    void ShowNext()
+    {
+        currentIndex++;
+
+        if (currentIndex > 0 && currentIndex <= canvasGroups.Length)
+        {
+            // 이전 문구 FadeOut
+            StartCoroutine(FadeOut(canvasGroups[currentIndex - 1]));
+        }
+
+        if (currentIndex < canvasGroups.Length)
+        {
+            // 현재 문구 FadeIn
+            StartCoroutine(FadeIn(canvasGroups[currentIndex]));
+        }
+        else
+        {
+            StartCoroutine(FadeIn(buttonGroup)); // 마지막엔 버튼 등장
+        }
+    }
+
+    IEnumerator FadeIn(CanvasGroup group)
+    {
+        isTransitioning = true;
         float time = 0f;
-        float start = fadeIn ? 0 : 1;
-        float end = fadeIn ? 1 : 0;
+        while (time < fadeDuration)
+        {
+            group.alpha = Mathf.Lerp(0, 1, time / fadeDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        SetAlpha(group, 1f);
+        isTransitioning = false;
+    }
+
+    IEnumerator FadeOut(CanvasGroup group)
+    {
+        isTransitioning = true;
+        float time = 0f;
+        while (time < fadeDuration)
+        {
+            group.alpha = Mathf.Lerp(1, 0, time / fadeDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        SetAlpha(group, 0f);
+        isTransitioning = false;
+    }
+
+    void SetAlpha(CanvasGroup group, float alpha)
+    {
+        group.alpha = alpha;
+        group.interactable = alpha >= 1;
+        group.blocksRaycasts = alpha >= 1;
+    }
+
+    public void OnClickNextPuzzle()
+    {
+        StartCoroutine(FadeOutAndLoad("0_ChapterSelect"));
+    }
+
+    IEnumerator FadeOutAndLoad(string sceneName)
+    {
+        fullscreenPanel.gameObject.SetActive(true);
+        float time = 0f;
+        float duration = 1f;
 
         while (time < duration)
         {
+            fullscreenPanel.alpha = Mathf.Lerp(0f, 1f, time / duration);
             time += Time.deltaTime;
-            group.alpha = Mathf.Lerp(start, end, time / duration);
             yield return null;
         }
 
-        group.alpha = end;
-        group.gameObject.SetActive(fadeIn); // 안 보일 땐 비활성화
+        fullscreenPanel.alpha = 1f;
+        SceneManager.LoadScene(sceneName);
     }
 }
+

@@ -29,17 +29,6 @@ public class ChapterSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.Save();
-            Debug.Log("PlayerPrefs 초기화 완료");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (button.interactable)
@@ -56,6 +45,7 @@ public class ChapterSelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (!button.interactable) return;
 
         PlayerPrefs.SetInt("선택된 주제", puzzleID);
+        PlayerPrefs.SetString("LastPuzzleScene", $"Puz{puzzleID}_Starting");
         PlayerPrefs.Save();
 
         string nextSceneName = $"Puz{puzzleID}_Starting";

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd8468ca145d0b74eacc02eb49ea00b4, type: 3}
+  m_Name: ChapterMeta
+  m_EditorClassIdentifier: 
+  chapters:
+  - puzzleId: puz1
+    sceneName: Puz1_Starting
+    status: 0
+  - puzzleId: puz2
+    sceneName: Puz2_Starting
+    status: 0
+  - puzzleId: puz3
+    sceneName: Puz3_Starting
+    status: 0
+  - puzzleId: puz4
+    sceneName: Puz4_Starting
+    status: 0
+  - puzzleId: puz5
+    sceneName: Puz5_Starting
+    status: 0
+  - puzzleId: puz6
+    sceneName: Puz6_Starting
+    status: 0
+  - puzzleId: puz7
+    sceneName: Puz7_Starting
+    status: 0
+  - puzzleId: puz8
+    sceneName: Puz8_Starting
+    status: 0
+  - puzzleId: puz9
+    sceneName: Puz9_Starting
+    status: 0
+  - puzzleId: puz10
+    sceneName: Puz10_Starting
+    status: 0
+  - puzzleId: puz11
+    sceneName: Puz11_Starting
+    status: 0
+  - puzzleId: puz12
+    sceneName: Puz12_Starting
+    status: 0
+  - puzzleId: puz13
+    sceneName: Puz13_Starting
+    status: 0
+  - puzzleId: puz14
+    sceneName: Puz14_Starting
+    status: 0
+  - puzzleId: Puz15
+    sceneName: Puz15_Starting
+    status: 0
+  - puzzleId: puz16
+    sceneName: Puz16_Starting
+    status: 0
+  - puzzleId: puz17
+    sceneName: Puz17_Starting
+    status: 0

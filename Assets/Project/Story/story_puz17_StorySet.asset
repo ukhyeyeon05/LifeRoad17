@@ -1,0 +1,253 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de8e05f04ca588419838d933500abaa, type: 3}
+  m_Name: story_puz17_StorySet
+  m_EditorClassIdentifier: 
+  storyList:
+  - question: "\uD574\uC678 \uC9C4\uCD9C \uAD6D\uAC00\uB97C \uACB0\uC815\uD574\uC57C
+      \uD55C\uB2E4."
+    choices:
+    - "\uAC1C\uBC1C\uB3C4\uC0C1\uAD6D \uC911 \uAD50\uC721 \uC778\uD504\uB77C\uAC00
+      \uC788\uB294 \uAD6D\uAC00"
+    - "\uC9C0\uB9AC\uC801\uC73C\uB85C \uAC00\uAE4C\uC6B4 \uAD6D\uAC00"
+    - "\uC778\uAC74\uBE44\uAC00 \uAC00\uC7A5 \uC800\uB834\uD55C \uAD6D\uAC00"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: 4
+      - key: "\uAC74\uAC15"
+        value: 3
+    - effects:
+      - key: "\uB3C8"
+        value: 5
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uB3C8"
+        value: 2
+      - key: "\uAC74\uAC15"
+        value: 5
+  - question: "\uD604\uC9C0\uC758 \uC5B8\uC5B4\uC640 \uBB38\uD654\uAC00 \uB0AF\uC124\uB2E4."
+    choices:
+    - "\uBB38\uD654 \uC804\uBB38\uAC00 \uBC0F \uD1B5\uC5ED\uC0AC \uCC44\uC6A9"
+    - "\uC628\uB77C\uC778 \uBC88\uC5ED\uAE30 \uC774\uC6A9"
+    - "\uD604\uC9C0\uB97C \uD68C\uC0AC \uAE30\uC900\uC5D0 \uB9DE\uCD94\uB3C4\uB85D
+      \uD568"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: -2
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uAC74\uAC15"
+        value: -1
+    - effects:
+      - key: "\uB3C8"
+        value: -1
+  - question: "\uD604\uC9C0 \uC9C1\uC6D0\uC758 \uCC44\uC6A9\uC774 \uD544\uC694\uD558\uB2E4."
+    choices:
+    - "\uACF5\uC815\uD55C \uBA74\uC811 \uAE30\uC900 \uB9C8\uB828"
+    - "\uC9C0\uC778\uC758 \uCD94\uCC9C\uC744 \uC6B0\uC120"
+    - "\uC790\uAD6D \uC778\uC7AC\uC5D0 \uC6B0\uD638\uC801\uC778 \uD0DC\uB3C4"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: 4
+      - key: "\uAC74\uAC15"
+        value: 3
+    - effects:
+      - key: "\uB3C8"
+        value: 5
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uB3C8"
+        value: 2
+      - key: "\uAC74\uAC15"
+        value: 5
+  - question: "\uD604\uC9C0 \uBE44\uC815\uBD80\uAE30\uAD6C\uC5D0\uC11C \uC790\uC6D0\uC21C\uD658
+      \uCEA0\uD398\uC778 \uD611\uB825\uC744 \uC694\uCCAD\uD588\uB2E4."
+    choices:
+    - "\uACF5\uB3D9 \uCEA0\uD398\uC778 \uAE30\uD68D"
+    - "\uAE30\uBD80\uB9CC\uD558\uACE0 \uAD00\uC5EC\uD558\uC9C0 \uC54A\uC74C"
+    - "\uBE44\uC815\uBD80\uAE30\uAD6C \uD65C\uB3D9\uC740 \uBE44\uD6A8\uC728\uC801"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: -2
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uAC74\uAC15"
+        value: -1
+    - effects:
+      - key: "\uB3C8"
+        value: -1
+  - question: "\uD604\uC9C0 \uC8FC\uBBFC\uC758 \uBC18\uBC1C\uC774 \uC2EC\uD574\uC84C\uB2E4."
+    choices:
+    - "\uC8FC\uBBFC\uACFC\uC758 \uAC04\uB2F4\uD68C \uAC1C\uCD5C"
+    - "\uBC95\uC801\uC73C\uB85C \uC815\uB2F9\uD558\uB2C8 \uBB34\uC2DC"
+    - "\uC2DC\uAC04\uC5D0\uAC8C \uB9E1\uAE40"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: 4
+      - key: "\uAC74\uAC15"
+        value: 3
+    - effects:
+      - key: "\uB3C8"
+        value: 5
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uB3C8"
+        value: 2
+      - key: "\uAC74\uAC15"
+        value: 5
+  - question: "\uC9C4\uCD9C \uBAA9\uD45C \uAD6D\uAC00\uC758 \uC815\uBD80\uC5D0\uC11C
+      \uD658\uACBD\uC601\uD5A5\uD3C9\uAC00\uB97C \uC694\uAD6C\uD588\uB2E4."
+    choices:
+    - "\uD604\uC9C0 \uAE30\uC900 \uC874\uC911 \uBC0F \uC131\uC2E4\uD55C \uC81C\uCD9C"
+    - "\uB85C\uBE44\uB85C \uBB34\uB9C8"
+    - "\uD658\uACBD\uC601\uD5A5\uD3C9\uAC00 \uAC70\uC808"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: -2
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uAC74\uAC15"
+        value: -1
+    - effects:
+      - key: "\uB3C8"
+        value: -1
+  - question: "\uD604\uC9C0 \uB178\uB3D9\uC790 \uBCF5\uC9C0 \uBB38\uC81C\uAC00 \uC81C\uAE30\uB418\uC5C8\uB2E4."
+    choices:
+    - "\uAE09\uC5EC \uC778\uC0C1\uACFC \uC758\uB8CC\uC9C0\uC6D0 \uB4F1 \uBCF5\uC9C0
+      \uD655\uB300"
+    - "\uB2E8\uAE30 \uACC4\uC57D \uC704\uC8FC\uB85C \uC870\uC728"
+    - "\uB178\uB3D9 \uC870\uD569\uC740 \uD5C8\uC6A9\uD558\uC9C0 \uC54A\uC74C"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: 4
+      - key: "\uAC74\uAC15"
+        value: 3
+    - effects:
+      - key: "\uB3C8"
+        value: 5
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uB3C8"
+        value: 2
+      - key: "\uAC74\uAC15"
+        value: 5
+  - question: "\uAD6D\uC81C \uCEE8\uD37C\uB7F0\uC2A4\uC5D0 \uCD08\uCCAD\uBC1B\uC558\uB2E4."
+    choices:
+    - "\uC5C5\uC0AC\uC774\uD074\uB9C1\uC758 \uAC00\uCE58\uC640 \uBE44\uC804 \uBC1C\uD45C"
+    - "\uB124\uD2B8\uC6CC\uD0B9 \uC704\uC8FC\uC758 \uD65C\uB3D9"
+    - "\uBD88\uCC38"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: -2
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uAC74\uAC15"
+        value: -1
+    - effects:
+      - key: "\uB3C8"
+        value: -1
+  - question: "\uAE30\uC220 \uC774\uC804 \uC694\uCCAD\uC774 \uB4E4\uC5B4\uC654\uB2E4."
+    choices:
+    - "\uACF5\uB3D9 \uAC1C\uBC1C\uC744 \uC81C\uC548"
+    - "\uAE30\uC220 \uC720\uCD9C \uC6B0\uB824 \uBC0F \uAC70\uC808"
+    - "\uAE30\uC220 \uB3C5\uC810\uC744 \uAC15\uC870"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: 4
+      - key: "\uAC74\uAC15"
+        value: 3
+    - effects:
+      - key: "\uB3C8"
+        value: 5
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uB3C8"
+        value: 2
+      - key: "\uAC74\uAC15"
+        value: 5
+  - question: "\uAD6D\uC81C \uD30C\uD2B8\uB108\uC2ED\uC744 \uD655\uB300\uD560 \uAE30\uD68C\uAC00
+      \uC0DD\uACBC\uB2E4."
+    choices:
+    - "\uAE00\uB85C\uBC8C \uAE30\uC5C5\uACFC \uD611\uC5C5\uD574 \uD604\uC9C0\uD654
+      \uD504\uB85C\uC81D\uD2B8"
+    - "\uAD6D\uB0B4 \uAE30\uC5C5 \uC911\uC2EC\uC73C\uB85C \uC804\uAC1C"
+    - "\uB3C5\uC790\uC801\uC73C\uB85C \uC6B4\uC601 \uACE0\uC218"
+    results:
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    - "\uC785\uB825\uC911"
+    choiceEffects:
+    - effects:
+      - key: "\uB3C8"
+        value: -2
+      - key: "\uAC74\uAC15"
+        value: 2
+    - effects:
+      - key: "\uAC74\uAC15"
+        value: -1
+    - effects:
+      - key: "\uB3C8"
+        value: -1

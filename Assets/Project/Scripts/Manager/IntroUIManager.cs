@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 public class IntroUIManager : MonoBehaviour
 {
-    public Button buttonNewGame;
+    public Button buttonStart;
     public Button buttonContinue;
     public Button buttonOptions;
     public GameObject panelOptions;
 
     void Start()
     {
-        buttonNewGame.onClick.AddListener(OnNewGameClicked);
+        buttonStart.onClick.AddListener(OnNewGameClicked);
         buttonContinue.onClick.AddListener(OnContinueClicked);
         buttonOptions.onClick.AddListener(ToggleOptionsPanel);
 
@@ -18,7 +18,7 @@ public class IntroUIManager : MonoBehaviour
         panelOptions.SetActive(false);
     }
 
-    public void OnNewGameClicked()
+   public void OnNewGameClicked()
     {
         GameManager.Instance.NewGame();
     }

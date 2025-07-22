@@ -143,7 +143,7 @@ public class EndingManager : MonoBehaviour
     public GameObject buttonPanelBad;
     public GameObject arrowGuide; // ±ôºýÀÌ´Â È­»ìÇ¥
     public EndingData[] endingDataList;
-    public AudioSource clickSound;
+    /*public AudioSource clickSound;*/
 
     private string puzzleId;
     private string endingType; // "Normal" or "Bad"
@@ -196,7 +196,7 @@ public class EndingManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !isTransitioning && currentStep < textSteps.Length)
         {
             if (arrowGuide != null) arrowGuide.SetActive(false);
-            clickSound?.Play();
+            /*clickSound?.Play();*/
 
             currentStep++;
             if (currentStep < textSteps.Length)

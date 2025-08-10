@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430878a94e7483049bce30b12612c286, type: 3}
   m_Name: Puz09_EndingData
   m_EditorClassIdentifier: 
-  puzzleId: puz9
+  puzzleId: Puz9
   normalTitle: Normal Ending
-  normalFeedback: "\uC228 \uAC00\uC05C \uB0A0\uB4E4\uC774 \uACC4\uC18D \uB410\uB2E4.
+  normalFeedback: "9\uC228 \uAC00\uC05C \uB0A0\uB4E4\uC774 \uACC4\uC18D \uB410\uB2E4.
     \uAC00\uC9C4 \uAC74 \uB9CE\uC9C0 \uC54A\uC558\uC9C0\uB9CC, \uB05D\uAE4C\uC9C0
     \uBC84\uD17C\uB2E4."
   badTitle: Bad Ending

@@ -7,6 +7,7 @@ public class RetryCurrentPuzzle : MonoBehaviour
 
     void Start()
     {
+        // 저장된 씬 이름 불러오기
         puzzleSceneName = PlayerPrefs.GetString("LastPlayedPuzzleScene", "");
     }
 
@@ -14,7 +15,13 @@ public class RetryCurrentPuzzle : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(puzzleSceneName))
         {
-            PlayerStatus.Instance.ResetStatus();
+            // 상태 초기화 (있다면)
+            if (PlayerStatus.Instance != null)
+            {
+                PlayerStatus.Instance.ResetStatus();
+            }
+
+            Debug.Log($"[Retry] 다시 로드: {puzzleSceneName}");
             SceneManager.LoadScene(puzzleSceneName);
         }
         else

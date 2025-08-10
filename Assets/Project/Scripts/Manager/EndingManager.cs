@@ -1,136 +1,3 @@
-/*using UnityEngine;
-using TMPro;
-using UnityEngine.SceneManagement;
-using System.Collections;
-
-public class EndingManager : MonoBehaviour
-{
-    public TextMeshProUGUI endingText;
-    public GameObject buttonPanelNormal;
-    public GameObject buttonPanelBad;
-    public EndingData[] endingDataList;
-    public AudioSource clickSound;
-
-    private string puzzleId;
-    private string endingType;
-    private int money, health;
-
-    private string[] textSteps;
-    private int currentStep = 0;
-
-    private CanvasGroup textGroup;
-    private bool isTransitioning = false;
-
-    void Start()
-    {
-        // 퍼즐 정보 로딩
-        puzzleId = PlayerPrefs.GetString("puzzleId", "Puz01");
-        endingType = PlayerPrefs.GetString("endingType", "Normal");
-        money = PlayerPrefs.GetInt("money", 0);
-        health = PlayerPrefs.GetInt("health", 0);
-
-        // 패널 모두 숨김
-        buttonPanelNormal.SetActive(false);
-        buttonPanelBad.SetActive(false);
-
-        // 텍스트 그룹 세팅
-        textGroup = endingText.GetComponent<CanvasGroup>();
-        if (textGroup == null) textGroup = endingText.gameObject.AddComponent<CanvasGroup>();
-
-        // 엔딩 데이터 불러오기
-        EndingData data = GetEndingData();
-        if (data == null)
-        {
-            endingText.text = "해당 퍼즐의 엔딩 정보를 찾을 수 없습니다.";
-            return;
-        }
-
-        // 출력할 텍스트 단계 구성
-        textSteps = new string[]
-        {
-            endingType == "Normal" ? data.normalTitle : data.badTitle,
-            endingType == "Normal" ? data.normalFeedback : data.badFeedback,
-            "어떠셨나요?",
-            data.realWorldInfo
-        };
-
-        currentStep = 0;
-        StartCoroutine(ShowTextStep(textSteps[currentStep]));
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0) && !isTransitioning && currentStep < textSteps.Length)
-        {
-            clickSound?.Play();
-
-            currentStep++;
-            if (currentStep < textSteps.Length)
-            {
-                StartCoroutine(ShowTextStep(textSteps[currentStep]));
-            }
-            else
-            {
-                StartCoroutine(FadeInButton());
-            }
-        }
-    }
-
-    EndingData GetEndingData()
-    {
-        foreach (var data in endingDataList)
-        {
-            if (data.puzzleId == puzzleId)
-                return data;
-        }
-        return null;
-    }
-
-    IEnumerator ShowTextStep(string message)
-    {
-        isTransitioning = true;
-
-        // 페이드 아웃
-        for (float t = 0; t < 1f; t += Time.deltaTime)
-        {
-            textGroup.alpha = 1f - t;
-            yield return null;
-        }
-
-        textGroup.alpha = 0f;
-        endingText.text = message;
-
-        // 페이드 인
-        for (float t = 0; t < 1f; t += Time.deltaTime)
-        {
-            textGroup.alpha = t;
-            yield return null;
-        }
-
-        textGroup.alpha = 1f;
-        isTransitioning = false;
-    }
-
-    IEnumerator FadeInButton()
-    {
-        GameObject panelToShow = endingType == "Normal" ? buttonPanelNormal : buttonPanelBad;
-
-        CanvasGroup group = panelToShow.GetComponent<CanvasGroup>();
-        if (group == null) group = panelToShow.AddComponent<CanvasGroup>();
-
-        panelToShow.SetActive(true);
-        group.alpha = 0f;
-
-        for (float t = 0; t < 1f; t += Time.deltaTime)
-        {
-            group.alpha = t;
-            yield return null;
-        }
-
-        group.alpha = 1f;
-    }
-}
-*/
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -141,15 +8,14 @@ public class EndingManager : MonoBehaviour
     public TextMeshProUGUI endingText;
     public GameObject buttonPanelNormal;
     public GameObject buttonPanelBad;
-    public GameObject arrowGuide; // 깜빡이는 화살표
+    public GameObject arrowGuide;
     public EndingData[] endingDataList;
-    /*public AudioSource clickSound;*/
 
     private string puzzleId;
-    private string endingType; // "Normal" or "Bad"
+    private string endingType;
     private int money, health;
 
-    private string[] textSteps;
+    private string[] textSteps = new string[0]; // ← null 방지용 기본값
     private int currentStep = 0;
 
     private CanvasGroup textGroup;
@@ -157,10 +23,12 @@ public class EndingManager : MonoBehaviour
 
     void Start()
     {
-        puzzleId = PlayerPrefs.GetString("puzzleId", "Puz01");
+        puzzleId = PlayerPrefs.GetString("puzzleId", "");
         endingType = PlayerPrefs.GetString("endingType", "Normal");
         money = PlayerPrefs.GetInt("money", 0);
         health = PlayerPrefs.GetInt("health", 0);
+
+        Debug.Log($"[EndingManager] 불러온 puzzleId = {puzzleId}");
 
         if (buttonPanelNormal != null) buttonPanelNormal.SetActive(false);
         if (buttonPanelBad != null) buttonPanelBad.SetActive(false);
@@ -168,14 +36,13 @@ public class EndingManager : MonoBehaviour
 
         textGroup = endingText.GetComponent<CanvasGroup>();
         if (textGroup == null)
-        {
             textGroup = endingText.gameObject.AddComponent<CanvasGroup>();
-        }
 
         EndingData data = GetEndingData();
         if (data == null)
         {
             endingText.text = "해당 퍼즐의 엔딩 정보를 찾을 수 없습니다.";
+            textSteps = new string[0]; // ← null 방지
             return;
         }
 
@@ -195,8 +62,8 @@ public class EndingManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isTransitioning && currentStep < textSteps.Length)
         {
-            if (arrowGuide != null) arrowGuide.SetActive(false);
-            /*clickSound?.Play();*/
+            if (arrowGuide != null)
+                arrowGuide.SetActive(false);
 
             currentStep++;
             if (currentStep < textSteps.Length)
@@ -214,9 +81,11 @@ public class EndingManager : MonoBehaviour
     {
         foreach (var data in endingDataList)
         {
-            if (data.puzzleId == puzzleId)
+            if (data != null && data.puzzleId == puzzleId)
                 return data;
         }
+
+        Debug.LogWarning($"[EndingManager] puzzleId에 맞는 EndingData를 찾을 수 없습니다: {puzzleId}");
         return null;
     }
 
@@ -224,21 +93,21 @@ public class EndingManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        // Fade out
         for (float t = 0; t < 1f; t += Time.deltaTime)
         {
             textGroup.alpha = 1f - t;
             yield return null;
         }
+
         textGroup.alpha = 0f;
         endingText.text = message;
 
-        // Fade in
         for (float t = 0; t < 1f; t += Time.deltaTime)
         {
             textGroup.alpha = t;
             yield return null;
         }
+
         textGroup.alpha = 1f;
 
         if (arrowGuide != null)
@@ -264,6 +133,13 @@ public class EndingManager : MonoBehaviour
     IEnumerator FadeInButton()
     {
         GameObject panelToShow = endingType == "Normal" ? buttonPanelNormal : buttonPanelBad;
+
+        // 퍼즐 클리어 저장
+        if (endingType == "Normal" && !string.IsNullOrEmpty(puzzleId))
+        {
+            GameManager.Instance.MarkPuzzleAsCleared(puzzleId.Trim());
+            Debug.Log($"[EndingManager] 클리어 저장됨: Clear_{puzzleId}");
+        }
 
         if (panelToShow != null)
         {

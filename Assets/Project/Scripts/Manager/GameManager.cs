@@ -14,14 +14,13 @@ public class GameManager : MonoBehaviour
     public float sfxVolume = 0.5f;
     public int languageIndex = 0;
 
-
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);//씬 유지
-            LoadOptionSettings(); // 옵션 설정 불러오기
+            DontDestroyOnLoad(gameObject);
+            LoadOptionSettings();
         }
         else
         {
@@ -31,10 +30,14 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
-        PlayerPrefs.DeleteAll(); // 저장 초기화
+        Debug.Log("[GameManager] 새 게임 시작 - 모든 저장 초기화 (퍼즐 클리어 기록 포함)");
+
+        PlayerPrefs.DeleteAll(); //퍼즐 클리어 포함 전체 삭제
         hasSavedData = false;
+
         SceneManager.LoadScene("NarrationScene");
     }
+
 
     public void LoadGame()
     {
@@ -49,15 +52,25 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetString("SavedPuzzle", puzzleId);
     }
 
-    public void LoadOptionSettings() //옵션 설정 값 불러오기
+    public void LoadOptionSettings()
     {
         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
         sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
         languageIndex = PlayerPrefs.GetInt("LanguageIndex", 0);
+    }
 
-        Debug.Log($"옵션 불러오기 - BGM: {bgmVolume}, SFX: {sfxVolume}, Lang: {languageIndex}");
+    public bool IsPuzzleCleared(string puzzleId)
+    {
+        string key = "Clear_" + puzzleId.Trim(); // 항상 일치된 형식
+        return PlayerPrefs.GetInt(key, 0) == 1;
+    }
 
-       
+    public void MarkPuzzleAsCleared(string puzzleId)
+    {
+        string key = "Clear_" + puzzleId.Trim();
+        PlayerPrefs.SetInt(key, 1);
+        PlayerPrefs.Save();
+        Debug.Log($"[GameManager] 퍼즐 클리어 저장됨: {key}");
     }
 }
 

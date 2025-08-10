@@ -13,54 +13,54 @@ MonoBehaviour:
   m_Name: ChapterMeta
   m_EditorClassIdentifier: 
   chapters:
-  - puzzleId: puz1
+  - puzzleId: Puz1
     sceneName: Puz1_Starting
     status: 0
-  - puzzleId: puz2
+  - puzzleId: Puz2
     sceneName: Puz2_Starting
     status: 0
-  - puzzleId: puz3
+  - puzzleId: Puz3
     sceneName: Puz3_Starting
     status: 0
-  - puzzleId: puz4
+  - puzzleId: Puz4
     sceneName: Puz4_Starting
     status: 0
-  - puzzleId: puz5
+  - puzzleId: Puz5
     sceneName: Puz5_Starting
     status: 0
-  - puzzleId: puz6
+  - puzzleId: Puz6
     sceneName: Puz6_Starting
     status: 0
-  - puzzleId: puz7
+  - puzzleId: Puz7
     sceneName: Puz7_Starting
     status: 0
-  - puzzleId: puz8
+  - puzzleId: Puz8
     sceneName: Puz8_Starting
     status: 0
-  - puzzleId: puz9
+  - puzzleId: Puz9
     sceneName: Puz9_Starting
     status: 0
-  - puzzleId: puz10
+  - puzzleId: Puz10
     sceneName: Puz10_Starting
     status: 0
-  - puzzleId: puz11
+  - puzzleId: Puz11
     sceneName: Puz11_Starting
     status: 0
-  - puzzleId: puz12
+  - puzzleId: Puz12
     sceneName: Puz12_Starting
     status: 0
-  - puzzleId: puz13
+  - puzzleId: Puz13
     sceneName: Puz13_Starting
     status: 0
-  - puzzleId: puz14
+  - puzzleId: Puz14
     sceneName: Puz14_Starting
     status: 0
   - puzzleId: Puz15
     sceneName: Puz15_Starting
     status: 0
-  - puzzleId: puz16
+  - puzzleId: Puz16
     sceneName: Puz16_Starting
     status: 0
-  - puzzleId: puz17
+  - puzzleId: Puz17
     sceneName: Puz17_Starting
     status: 0

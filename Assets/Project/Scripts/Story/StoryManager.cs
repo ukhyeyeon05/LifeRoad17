@@ -1,104 +1,10 @@
 /*using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-
-public class StoryManager : MonoBehaviour
-{
-    public StorySet storySet;
-    public PlayerStatus playerStatus;
-
-    public GameObject panelIntroText;
-    public GameObject panelChoice;
-    public TextMeshProUGUI questionText;
-    public TextMeshProUGUI[] choiceTexts;
-    public Button[] choiceButtons;
-
-    public GameObject resultPanel;
-    public TextMeshProUGUI resultText;
-
-    private int currentIndex = 0;
-    private bool waitingForClickToContinue = false;
-    private bool hasIntroEnded = false;
-
-    void Start()
-    {
-        panelIntroText.SetActive(true);       // 소개 먼저 보여주기
-        panelChoice.SetActive(false);
-        questionText.gameObject.SetActive(false);
-        resultPanel.SetActive(false);
-        waitingForClickToContinue = false;
-    }
-
-    void ShowCurrentStory()
-    {
-        if (currentIndex >= storySet.storyList.Count)
-        {
-            Debug.Log("스토리 끝!");
-            return;
-        }
-
-        var data = storySet.storyList[currentIndex];
-
-        questionText.text = data.question;
-        for (int i = 0; i < choiceTexts.Length; i++)
-        {
-            choiceTexts[i].text = data.choices[i];
-            int capturedIndex = i;
-            choiceButtons[i].onClick.RemoveAllListeners();
-            choiceButtons[i].onClick.AddListener(() => OnChoiceSelected(capturedIndex));
-        }
-
-        panelChoice.SetActive(true);
-        questionText.gameObject.SetActive(true);
-        resultPanel.SetActive(false);
-        waitingForClickToContinue = false;
-    }
-
-    void OnChoiceSelected(int selectedIndex)
-    {
-        var data = storySet.storyList[currentIndex];
-
-        // 1. 상태 반영
-        if (playerStatus != null &&
-            data.choiceEffects != null &&
-            selectedIndex < data.choiceEffects.Length &&
-            data.choiceEffects[selectedIndex] != null)
-        {
-            playerStatus.ApplyEffect(data.choiceEffects[selectedIndex].effects);
-        }
-
-        // 2. 질문/선택지 숨기고 결과 보여주기
-        panelChoice.SetActive(false);
-        questionText.gameObject.SetActive(false);
-
-        resultPanel.SetActive(true);
-        resultText.text = data.results[selectedIndex];
-
-        waitingForClickToContinue = true;
-    }
-
-    void Update()
-    {
-        if (!hasIntroEnded && Input.GetMouseButtonDown(0))
-        {
-            hasIntroEnded = true;
-            panelIntroText.SetActive(false);
-            ShowCurrentStory();
-        }
-        else if (waitingForClickToContinue && Input.GetMouseButtonDown(0))
-        {
-            currentIndex++;
-            ShowCurrentStory();
-        }
-    }
-}*/
-using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
 public class StoryManager : MonoBehaviour
 {
-    public StorySet storySet; // ScriptableObject 연결
+    public StorySet storySet;
     private int currentIndex = 0;
     private bool waitingForNext = false;
 
@@ -108,16 +14,40 @@ public class StoryManager : MonoBehaviour
     public GameObject panelChoice;
 
     public TextMeshProUGUI questionText;
-    public TextMeshProUGUI[] choiceTexts; // 3개
+    public TextMeshProUGUI[] choiceTexts;
     public GameObject[] choiceButtons;
 
     public GameObject resultPanel;
     public TextMeshProUGUI resultText;
 
+    private string puzzleId = "";
+
     private void Start()
     {
-        panelIntroText.SetActive(true);     // 인트로 먼저 보여줌
-        panelChoice.SetActive(false);       // 선택지는 숨김
+        panelIntroText.SetActive(true);
+        panelChoice.SetActive(false);
+
+        PuzzleIdSetter setter = Object.FindFirstObjectByType<PuzzleIdSetter>();
+        if (setter != null)
+        {
+            puzzleId = setter.puzzleId;
+            PlayerPrefs.SetString("puzzleId", puzzleId);
+        }
+
+        // 저장된 진행 불러오기
+        if (SaveSystem.HasSavedGame())
+        {
+            SaveData data = SaveSystem.LoadGame();
+            if (data != null && data.puzzleId == puzzleId)
+            {
+                currentIndex = data.currentIndex;
+                playerStatus.money = data.money;
+                playerStatus.health = data.health;
+                Debug.Log($"[StoryManager] 진행 복원 완료: index={currentIndex}, 돈={data.money}, 건강={data.health}");
+            }
+        }
+
+        DisplayCurrentStory();
     }
 
     public void OnIntroClick()
@@ -129,50 +59,66 @@ public class StoryManager : MonoBehaviour
 
     public void OnChoiceSelected(int choiceIndex)
     {
-        StatusEffect[] effects = storySet.storyList[currentIndex].choiceEffects[choiceIndex].effects;
+        StatusEffect[] effects = storySet.stories[currentIndex].choiceEffects[choiceIndex].effects;
         playerStatus.ApplyEffect(effects);
 
-        // 핵심 요소가 0 이하가 되면 즉시 엔딩으로 전환
         if (playerStatus.money <= 0 || playerStatus.health <= 0)
         {
-            PlayerPrefs.SetInt("money", playerStatus.money);
-            PlayerPrefs.SetInt("health", playerStatus.health);
-            PlayerPrefs.SetString("puzzleId", "puz1");
-            PlayerPrefs.SetString("endingType", "Bad");
-
-            SceneManager.LoadScene("EndingScene");
-            return; // 이후 코드 실행하지 않도록
+            SaveBadEnding();
+            return;
         }
 
-        // 결과 출력 흐름
         panelChoice.SetActive(false);
 
-        string result = storySet.storyList[currentIndex].results[choiceIndex];
+        string result = storySet.stories[currentIndex].results[choiceIndex];
         resultPanel.SetActive(true);
         resultText.text = result;
 
         currentIndex++;
         waitingForNext = true;
+
+        SaveProgress(); // 저장
     }
 
+    private void SaveProgress()
+    {
+        SaveData data = new SaveData
+        {
+            puzzleId = puzzleId,
+            currentIndex = currentIndex,
+            money = playerStatus.money,
+            health = playerStatus.health
+        };
 
+        SaveSystem.SaveGame(data);
+    }
+
+    private void SaveBadEnding()
+    {
+        PlayerPrefs.SetInt("money", playerStatus.money);
+        PlayerPrefs.SetInt("health", playerStatus.health);
+        PlayerPrefs.SetString("endingType", "Bad");
+        PlayerPrefs.SetString("puzzleId", puzzleId);
+
+        SaveSystem.ClearSavedGame();
+        SceneManager.LoadScene("EndingScene");
+    }
 
     private void NextStep()
     {
         resultPanel.SetActive(false);
 
-        if (currentIndex >= storySet.storyList.Count)
+        if (currentIndex >= storySet.stories.Count)
         {
-            // 핵심 요소 기준 엔딩 판단
             bool isBad = playerStatus.money <= 0 || playerStatus.health <= 0;
 
             PlayerPrefs.SetInt("money", playerStatus.money);
             PlayerPrefs.SetInt("health", playerStatus.health);
-            PlayerPrefs.SetString("puzzleId", "puz1");
             PlayerPrefs.SetString("endingType", isBad ? "Bad" : "Normal");
+            PlayerPrefs.SetString("puzzleId", puzzleId);
 
+            SaveSystem.ClearSavedGame();
             SceneManager.LoadScene("EndingScene");
-
         }
         else
         {
@@ -180,12 +126,9 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-
-
-
     private void DisplayCurrentStory()
     {
-        var current = storySet.storyList[currentIndex];
+        var current = storySet.stories[currentIndex];
 
         questionText.text = current.question;
 
@@ -196,7 +139,6 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    
     private void Update()
     {
         if (resultPanel.activeSelf && Input.GetMouseButtonDown(0) && waitingForNext)
@@ -204,11 +146,12 @@ public class StoryManager : MonoBehaviour
             waitingForNext = false;
             resultPanel.SetActive(false);
 
-            if (currentIndex >= storySet.storyList.Count)
+            if (currentIndex >= storySet.stories.Count)
             {
                 bool isBad = playerStatus.money <= 0 || playerStatus.health <= 0;
-                PlayerPrefs.SetString("puzzleId", "puz1");
                 PlayerPrefs.SetString("endingType", isBad ? "Bad" : "Normal");
+                PlayerPrefs.SetString("puzzleId", puzzleId);
+                SaveSystem.ClearSavedGame();
                 SceneManager.LoadScene("EndingScene");
             }
             else
@@ -218,5 +161,171 @@ public class StoryManager : MonoBehaviour
             }
         }
     }
+}*/
+using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
+public class StoryManager : MonoBehaviour
+{
+    public StorySet storySet;
+    private int currentIndex = 0;
+    private bool waitingForNext = false;
+
+    public PlayerStatus playerStatus;
+
+    public GameObject panelIntroText;
+    public GameObject panelChoice;
+
+    public TextMeshProUGUI questionText;
+    public TextMeshProUGUI[] choiceTexts;
+    public GameObject[] choiceButtons;
+
+    public GameObject resultPanel;
+    public TextMeshProUGUI resultText;
+
+    private string puzzleId = "";
+
+    private void Start()
+    {
+        panelIntroText.SetActive(true);
+        panelChoice.SetActive(false);
+
+        PuzzleIdSetter setter = Object.FindFirstObjectByType<PuzzleIdSetter>();
+        if (setter != null)
+        {
+            puzzleId = setter.puzzleId;
+            PlayerPrefs.SetString("puzzleId", puzzleId);
+        }
+
+        // 저장된 진행 불러오기
+        if (SaveSystem.HasSavedGame())
+        {
+            SaveData data = SaveSystem.LoadGame();
+            if (data != null && data.puzzleId == puzzleId)
+            {
+                currentIndex = data.currentIndex;
+                playerStatus.money = data.money;
+                playerStatus.health = data.health;
+                Debug.Log($"[StoryManager] 진행 복원 완료: index={currentIndex}, 돈={data.money}, 건강={data.health}");
+            }
+        }
+
+        DisplayCurrentStory();
+    }
+
+    public void OnIntroClick()
+    {
+        panelIntroText.SetActive(false);
+        panelChoice.SetActive(true);
+        DisplayCurrentStory();
+    }
+
+    public void OnChoiceSelected(int choiceIndex)
+    {
+        StatusEffect[] effects = storySet.stories[currentIndex].choiceEffects[choiceIndex].effects;
+        playerStatus.ApplyEffect(effects);
+
+        if (playerStatus.money <= 0 || playerStatus.health <= 0)
+        {
+            PlayerPrefs.SetInt("money", playerStatus.money);
+            PlayerPrefs.SetInt("health", playerStatus.health);
+            PlayerPrefs.SetString("endingType", "Bad");
+            PlayerPrefs.SetString("puzzleId", puzzleId);
+
+            SaveSystem.ClearSavedGame();
+            SceneManager.LoadScene("EndingScene");
+            return;
+        }
+
+        panelChoice.SetActive(false);
+
+        string result = storySet.stories[currentIndex].results[choiceIndex];
+        resultPanel.SetActive(true);
+        resultText.text = result;
+
+        currentIndex++;
+        waitingForNext = true;
+
+        SaveProgress(); // 저장
+    }
+
+    void SaveProgress()
+    {
+        SaveData data = new SaveData
+        {
+            puzzleId = puzzleId,
+            currentIndex = currentIndex,
+            money = playerStatus.money,
+            health = playerStatus.health
+        };
+
+        SaveSystem.SaveGame(data);
+    }
+
+    private void NextStep()
+    {
+        resultPanel.SetActive(false);
+
+        if (currentIndex >= storySet.stories.Count)
+        {
+            bool isBad = playerStatus.money <= 0 || playerStatus.health <= 0;
+
+            PlayerPrefs.SetInt("money", playerStatus.money);
+            PlayerPrefs.SetInt("health", playerStatus.health);
+            PlayerPrefs.SetString("endingType", isBad ? "Bad" : "Normal");
+            PlayerPrefs.SetString("puzzleId", puzzleId);
+
+            SaveSystem.ClearSavedGame();
+            SceneManager.LoadScene("EndingScene");
+        }
+        else
+        {
+            DisplayCurrentStory();
+        }
+    }
+
+    private void DisplayCurrentStory()
+    {
+        var current = storySet.stories[currentIndex];
+
+        questionText.text = current.question;
+
+        for (int i = 0; i < choiceTexts.Length; i++)
+        {
+            choiceTexts[i].text = current.choices[i];
+            choiceButtons[i].SetActive(true);
+        }
+
+        // 수치 UI 갱신
+        ChoiceEffectDisplay choiceEffectDisplay = Object.FindFirstObjectByType<ChoiceEffectDisplay>();
+        if (choiceEffectDisplay != null)
+        {
+            choiceEffectDisplay.UpdateEffectUI(currentIndex);
+        }
+    }
+
+    private void Update()
+    {
+        if (resultPanel.activeSelf && Input.GetMouseButtonDown(0) && waitingForNext)
+        {
+            waitingForNext = false;
+            resultPanel.SetActive(false);
+
+            if (currentIndex >= storySet.stories.Count)
+            {
+                bool isBad = playerStatus.money <= 0 || playerStatus.health <= 0;
+                PlayerPrefs.SetString("endingType", isBad ? "Bad" : "Normal");
+                PlayerPrefs.SetString("puzzleId", puzzleId);
+                SaveSystem.ClearSavedGame();
+                SceneManager.LoadScene("EndingScene");
+            }
+            else
+            {
+                panelChoice.SetActive(true);
+                DisplayCurrentStory();
+            }
+        }
+    }
 }
+

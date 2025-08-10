@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de8e05f04ca588419838d933500abaa, type: 3}
   m_Name: story_puz13_StorySet
   m_EditorClassIdentifier: 
-  storyList:
+  stories:
   - question: "\uACA8\uC6B8\uCCA0 \uC2AC\uB85C\uD504 \uD655\uC7A5\uC744 \uC704\uD574\uC11C
       \uB098\uBB34\uB4E4\uC744 \uBCA0\uC5B4\uB0BC\uC9C0 \uACB0\uC815\uD574\uC57C
       \uD55C\uB2E4."
